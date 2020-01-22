@@ -16,7 +16,7 @@ fig.add_scatter(secondary_y=True,  x=df.index, y=df["EUSA30"],
                 marker_color="DarkOrange", name="30Y interest rate")
 fig.update_layout(title_text="Equities vs interest rates")
 
-dash_app = dash.Dash()
+dash_app = dash.Dash(__name__)
 app = dash_app.server
 
 
