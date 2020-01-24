@@ -1,3 +1,3 @@
-dash #==1.7.0
-dash-daq #==0.3.1
-plotly_express # for graphs etc
+dash==1.8.0
+plotly_express==0.4.1 # for graphs etc
+flake8 # for linting purposes
