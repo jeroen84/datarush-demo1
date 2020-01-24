@@ -1,4 +1,3 @@
-# from flask import Flask
 import dash
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
@@ -71,4 +70,5 @@ dash_app.layout = dbc.Container(
 
 # run the dashboard
 if __name__ == '__main__':
-    dash_app.run_server(debug=True)
+    dash_app.run_server(host="0.0.0.0",
+                        debug=True)
