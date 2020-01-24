@@ -1,14 +1,13 @@
 # from flask import Flask
 import dash
-import dash_html_components as html
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 from plotly_express import line
 from plotly.subplots import make_subplots
 import pandas as pd
 
-df = pd.read_csv("marketdata.csv", index_col="Date")
-# remove empty data points, for visualisation purposes
-df.dropna(inplace=True)
+# load the dataset, ignoring empty datapoints
+df = pd.read_csv("marketdata.csv", index_col="Date").dropna()
 
 # create a df with the correlations
 df_corr = pd.DataFrame(df["FTSEAW"].rolling(30).corr(df["EUSA30"]))
@@ -29,13 +28,14 @@ fig_corr = line(df_corr,
                 y='Correlation',
                 title="Correlation Equities vs interest rates")
 
-# set up the server
-dash_app = dash.Dash(__name__)
+# set up the server, using a bootstrap theme
+dash_app = dash.Dash(__name__,
+                     external_stylesheets=[dbc.themes.UNITED])
 app = dash_app.server
 
 # define the layout of the dashboard
 dash_app.title = "Financial dashboard"
-dash_app.layout = html.Div(
+dash_app.layout = dbc.Container(
     [
         dcc.Markdown('''
         # A basic financial data dashboard using Dash!
