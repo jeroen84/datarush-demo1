@@ -124,6 +124,7 @@ app = dash_app.server
 dash_app.title = "Financial dashboard"
 dash_app.layout = dbc.Container(children=[
         dcc.Markdown('''
+
         # A basic financial data dashboard using Dash!
 
         Just try out this *simple* dashboard! For more information, \
@@ -136,10 +137,6 @@ dash_app.layout = dbc.Container(children=[
                 dbc.Row(children=[
                     dbc.Col(children=[
                         dcc.Markdown('''
-
-
-                                    ### **Dekkingsgraden**
-
                                     _(Dutch)_
 
                                     Overzicht van de actuele dekkinsgraden \
@@ -151,7 +148,7 @@ dash_app.layout = dbc.Container(children=[
                                     * [ABP](%s)
                                     * [PFZW](%s)
                                     ''' % (_URL["ABP"], _URL["PFZW"]))
-                    ]),
+                    ], width=4),
                     dbc.Col(children=[
                         dcc.Graph(figure=fig_dgr)
                     ])
@@ -161,14 +158,10 @@ dash_app.layout = dbc.Container(children=[
                 dbc.Row(children=[
                     dbc.Col(children=[
                         dcc.Markdown('''
-
-
-                        ### **Prices**
-
                         Please find the prices of the FTSE All-World index \
                         (LHS) and the 30 year EUR interest rate (RHS).
                         ''')
-                    ]),
+                    ], width=4),
                     dbc.Col(children=[
                         dcc.Graph(figure=fig)
                     ])
@@ -178,10 +171,6 @@ dash_app.layout = dbc.Container(children=[
                 dbc.Row(children=[
                     dbc.Col(children=[
                         dcc.Markdown('''
-
-
-                        ### **Correlation**
-
                         Please find the 30 day rolling window [correlation]\
                             (https://en.wikipedia.org/wiki/Correlation_and_dependence)\
                                 between the FTSE All-World index and \
@@ -191,7 +180,7 @@ dash_app.layout = dbc.Container(children=[
                             especially the relatively large negative correlation \
                                 during the months June, July and August.
                         ''')
-                    ]),
+                    ], width=4),
                     dbc.Col(children=[
                         dcc.Graph(figure=fig_corr)
                     ])
