@@ -1,16 +1,22 @@
-import dash
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
-from plotly_express import line
+from plotly.express import line
+import plotly.io as pio
 from plotly.subplots import make_subplots
 import pandas as pd
 import sqlite3
+import os
+from app import app
 
 _URL = {"ABP": "https://www.abp.nl/over-abp/financiele-situatie/dekkingsgraad/",
         "PFZW": "https://www.pfzw.nl/over-ons/dit-presteren-we/dekkingsgraad.html"}
 
+pio.templates.default = "plotly_dark"
+
+DIRPATH = os.path.dirname(os.path.realpath(__file__))
+
 # load the dataset, ignoring empty datapoints
-conn = sqlite3.connect("marketdata.db")
+conn = sqlite3.connect(os.path.join(DIRPATH, "marketdata.db"))
 _query = "SELECT date, name, value FROM marketdata"
 df = pd.read_sql(_query, conn, index_col="date")
 df = df.pivot_table(values="value", index="date", columns="name").dropna()
@@ -51,14 +57,8 @@ fig_dgr = line(df_dgr,
                color="fonds",
                title="Actuele dekkingsgraden")
 
-# set up the server, using a bootstrap theme
-dash_app = dash.Dash(__name__,
-                     external_stylesheets=[dbc.themes.BOOTSTRAP])
-app = dash_app.server
-
 # define the layout of the dashboard
-dash_app.title = "Financial dashboard"
-dash_app.layout = dbc.Container(children=[
+layout = dbc.Container(children=[
         dcc.Markdown('''
 
         # A basic financial data dashboard using Dash!
@@ -68,8 +68,8 @@ dash_app.layout = dbc.Container(children=[
 
         ***
         '''),
-        dcc.Tabs(children=[
-            dcc.Tab(label="Pensioenfondsen", children=[
+        dbc.Tabs(children=[
+            dbc.Tab(label="Pensioenfondsen", children=[
                 dbc.Row(children=[
                     dbc.Col(children=[
                         dcc.Markdown('''
@@ -86,11 +86,13 @@ dash_app.layout = dbc.Container(children=[
                                     ''' % (_URL["ABP"], _URL["PFZW"]))
                     ], width=4),
                     dbc.Col(children=[
-                        dcc.Graph(figure=fig_dgr)
+                        dcc.Graph(figure=fig_dgr,
+                                  responsive=True,
+                                  style={'width': '730px', 'height': '450px'})
                     ])
                 ])
             ]),
-            dcc.Tab(label="Risk factors", children=[
+            dbc.Tab(label="Risk factors", children=[
                 dbc.Row(children=[
                     dbc.Col(children=[
                         dcc.Markdown('''
@@ -99,11 +101,13 @@ dash_app.layout = dbc.Container(children=[
                         ''')
                     ], width=4),
                     dbc.Col(children=[
-                        dcc.Graph(figure=fig)
+                        dcc.Graph(figure=fig,
+                                  responsive=True,
+                                  style={'width': '730px', 'height': '450px'})
                     ])
                 ])
             ]),
-            dcc.Tab(label="Correlations", children=[
+            dbc.Tab(label="Correlations", children=[
                 dbc.Row(children=[
                     dbc.Col(children=[
                         dcc.Markdown('''
@@ -118,14 +122,11 @@ dash_app.layout = dbc.Container(children=[
                         ''')
                     ], width=4),
                     dbc.Col(children=[
-                        dcc.Graph(figure=fig_corr)
+                        dcc.Graph(figure=fig_corr,
+                                  responsive=True,
+                                  style={'width': '730px', 'height': '450px'})
                     ])
                 ])
             ])
         ])
 ])
-
-# run the dashboard
-if __name__ == '__main__':
-    dash_app.run_server(host="0.0.0.0",
-                        debug=True)
